@@ -31,6 +31,13 @@ void mpuSleep()
   IMU.writeBit(MPU9250_ADDRESS, PWR_MGMT_1, 5, true);
 }
 
+int16_t buf[3];
+int16_t *getAccel()
+{ 
+  IMU.readAccelData(buf);
+  return buf;
+}
+
 int16_t getBearing()
 {
   IMU.readMagData(IMU.magCount); // Read the x/y/z adc values
@@ -44,6 +51,10 @@ int16_t getBearing()
   float bearing = atan2(IMU.my, IMU.mx);
   return (bearing > 0 ? bearing : (2 * PI + bearing)) * 360 / (2 * PI);
 }
+
+
+
+
 
 int calibrateBearing()
 {

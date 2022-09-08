@@ -158,9 +158,9 @@ void MPU9250::setSleepEnabled(bool enabled)
 void MPU9250::writeBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t data)
 {
   uint8_t b = readByte(devAddr, regAddr);
-  printf("rb:%x\n", b);
+  // printf("rb:%x\n", b);
   b = (data != 0) ? (b | (1 << bitNum)) : (b & ~(1 << bitNum));
-  printf("wb:%x\n", b);
+  // printf("wb:%x\n", b);
   writeByte(devAddr, regAddr, b);
 }
 
