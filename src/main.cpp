@@ -6,6 +6,8 @@
 #include "clock.hpp"
 #include "pages.hpp"
 #include "mpu.hpp"
+#include "bt.hpp"
+#include "BluetoothSerial.h"
 
 int16_t *accelbuff;
 
@@ -15,14 +17,15 @@ void setup() {
   Wire.setClock(400000);
   initClock();
   tftInit();
+  bt_init();
   deactivateWifi();
   btStop();
   setupADC();
-  #ifndef IMU_SKIP
+#ifndef IMU_SKIP
   initMPU();
-  #else
+#else
   mpuDeepSleep();
-  #endif
+#endif
   initButton();
   setupBattery();
   }
@@ -33,5 +36,6 @@ void loop()
   printf("%6.6d, %6.6d, %6.6d\n", accelbuff[0], accelbuff[1],accelbuff[2]);
   handleUi();
   updateBatteryChargeStatus();
+//  bt_loop();
   
 }
