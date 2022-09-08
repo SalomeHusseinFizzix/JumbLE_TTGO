@@ -7,9 +7,10 @@
 #include "pages.hpp"
 #include "mpu.hpp"
 
-void setup()
-{
-  Serial.begin(115200);
+int16_t *accelbuff;
+
+void setup() {
+
   Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
   Wire.setClock(400000);
   initClock();
@@ -17,17 +18,20 @@ void setup()
   deactivateWifi();
   btStop();
   setupADC();
-#ifndef IMU_SKIP
+  #ifndef IMU_SKIP
   initMPU();
-#else
+  #else
   mpuDeepSleep();
-#endif
+  #endif
   initButton();
   setupBattery();
-}
+  }
 
-void loop()
+void loop() 
 {
+  accelbuff=getAccel();
+  printf("%6.6d, %6.6d, %6.6d\n", accelbuff[0], accelbuff[1],accelbuff[2]);
   handleUi();
   updateBatteryChargeStatus();
+  
 }

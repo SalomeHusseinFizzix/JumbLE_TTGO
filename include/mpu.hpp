@@ -18,3 +18,4 @@ void calibrateGyro();
 void mpuSleep();
 void mpuDeepSleep();
 float getTemperature();
+int16_t *getAccel();
