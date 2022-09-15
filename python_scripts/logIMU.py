@@ -15,7 +15,7 @@ time.sleep(1)
 x_data =[]
 y_data=[]
 z_data=[]
-for i in np.arange(1,600,1):
+for i in np.arange(1,1200,1):
     b = lilygo_data.readline()
     dataPacket=str(b,'utf-8')
     accel=dataPacket.split(',')
