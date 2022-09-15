@@ -1,10 +1,8 @@
-import pandas as pd
 import serial
 import sys
 import time
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
 from datetime import datetime as dt
 
 port = 'COM4'
@@ -20,8 +18,14 @@ time.sleep(1)
 x_data =[]
 y_data=[]
 z_data=[]
-for i in np.arange(1,1200,1):
-    b = lilygo_data.readline()
+
+col_names = ['x_acc', 'y_acc', 'z_acc']
+fn = f'data/IMUdata_{dt.now().strftime("%d%m%Y")}_{dt.now().strftime("%H%M%S")}.csv'
+fcsv = open(fn, 'w+')
+fcsv.write(','.join(col_names) + '\n')
+
+while True:
+    b = lilygo_data.readline().strip()
     dataPacket=str(b,'utf-8')
     accel=dataPacket.split(',')
     #kludgy try-catch to ignore the print statement regarding bluetooth enabling
@@ -32,11 +36,12 @@ for i in np.arange(1,1200,1):
     except:
         continue
 
+    if len(accel) == 3:
+        fcsv.write(dataPacket + '\n')
+
+fn.close()
 
 lilygo_data.close()
-
-imu_df=pd.DataFrame({'x_acc':x_data, 'y_acc':y_data, 'z_acc':z_data})
-imu_df.to_csv(f'data/IMUdata_{dt.now().strftime("%d%m%Y")}_{dt.now().strftime("%H%M%S")}.csv')
 
 plt.figure(figsize=(10,5))
 plt.plot(x_data)
