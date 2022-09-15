@@ -1,12 +1,17 @@
 import pandas as pd
 import serial
+import sys
 import time
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from datetime import datetime as dt
 
-lilygo_data =serial.Serial('COM4', 115200, timeout=1)
+port = 'COM4'
+if len(sys.argv) > 1:
+    port = sys.argv[1]
+    
+lilygo_data = serial.Serial(port, 115200, timeout=1)
 time.sleep(2)
 if not lilygo_data.isOpen():
     lilygo_data.open()
