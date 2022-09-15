@@ -22,7 +22,8 @@ void initButton()
 
 void handleUi()
 {
-  if (millis() - time_out > max_time_out && !handlingAction)
+
+  if (0 && (millis() - time_out > max_time_out && !handlingAction))
   {
     handleSleep(false);
   }
