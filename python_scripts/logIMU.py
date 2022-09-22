@@ -25,7 +25,7 @@ logging.info('Opened %s.' % (port))
 
 #time.sleep(1)
 
-col_names = ['x_acc', 'y_acc', 'z_acc', 'label']
+col_names = ['time', 'marker', 'data_1', 'data_2', 'data_3']
 fn = os.path.join('data', f'IMUdata_{dt.now().strftime("%d%m%Y")}_{dt.now().strftime("%H%M%S")}.csv')
 fcsv = open(fn, 'w+')
 
