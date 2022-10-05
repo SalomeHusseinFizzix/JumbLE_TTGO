@@ -23,7 +23,7 @@ void initButton()
 void handleUi()
 {
 
-  if (0 && (millis() - time_out > max_time_out && !handlingAction))
+  if (!isCharging() && (millis() - time_out > max_time_out && !handlingAction))
   {
     handleSleep(false);
   }
