@@ -32,8 +32,6 @@ void setup() {
 void loop() 
 {
   accelbuff=getAccel();
-  // printf("%6.6d, %6.6d, %6.6d\n", accelbuff[0], accelbuff[1], accelbuff[2]);
-  //Serial.printf("%6.6d, %6.6d, %6.6d\n", accelbuff[0], accelbuff[1], accelbuff[2]);
 
   if (SerialBT.connected())
   {
