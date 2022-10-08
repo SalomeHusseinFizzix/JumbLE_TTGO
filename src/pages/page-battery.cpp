@@ -5,7 +5,7 @@ void pageBattery(bool initialLoad)
   if (initialLoad)
   {
     deactivateWifi();
-    float voltage = getVoltage();
+    float voltage = getBattVoltage();
     drawBattery(voltage, calcPercentage(voltage), isCharging());
   }
 }

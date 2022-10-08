@@ -1,6 +1,9 @@
 #include "battery.hpp"
 
 int vref = 1100;
+bool charging = false;
+float vbus = -1.0f;
+float vbatt = -1.0f;
 
 void setupADC()
 {
@@ -18,11 +21,14 @@ void setupBattery()
   pinMode(LED_PIN, OUTPUT);
 }
 
-float getVoltage()
+float getBattVoltage()
 {
-  uint16_t v = analogRead(BATT_ADC_PIN);
-  float battery_voltage = ((float)v / 4095.0) * 2.0 * 3.3 * (vref / 1000.0);
-  return battery_voltage;
+    return vbatt;
+}
+
+float getVBusVoltage()
+{
+    return vbus;
 }
 
 uint8_t calcPercentage(float volts)
@@ -36,15 +42,26 @@ uint8_t calcPercentage(float volts)
   {
     percentage = 0;
   }
-  return (uint8_t)percentage;
+  return (uint8_t) percentage;
 }
 
 void updateBatteryChargeStatus()
 {
+  uint16_t v;
+  
+  v = analogRead(BATT_ADC_PIN);
+  vbatt = ((float) v / 4095.0) * 2.0 * 3.3 * (vref / 1000.0);
+
+  v = analogRead(VBUS_PIN);
+  vbus = ((float) v / 4095.0) * 2.0 * 3.3 * (vref / 1000.0);
+
+  charging = !digitalRead(CHARGE_PIN);
+
+  printf("vbatt: %3.3f, vbus: %3.3f, charge: %d", vbatt, vbus, isCharging());
   digitalWrite(LED_PIN, isCharging());
 }
 
 bool isCharging()
 {
-  return !digitalRead(CHARGE_PIN);
+  return charging;
 }
