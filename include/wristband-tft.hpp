@@ -23,6 +23,7 @@ void msgBig(const char *message);
 void msg(const char *message, uint16_t color);
 void msg(const char *message1, const char *message2, uint16_t color);
 void displayDate(const uint8_t day, const uint8_t month, const uint16_t year, bool utc);
+void displayBatt(float voltage, uint8_t percentage, bool charging);
 uint16_t displayHour(const uint8_t hour, const uint8_t minute, bool utc);
 uint16_t displayColon(uint16_t x, bool color, bool utc);
 void clearScreen();

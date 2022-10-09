@@ -1,4 +1,5 @@
 #include "pages/page-clock.hpp"
+#include "battery.hpp"
 
 unsigned long clockRefresh = 0;
 bool colon = true;
@@ -13,12 +14,15 @@ uint8_t oldDayUTC = 99;
 void pageClock(bool initialLoad)
 {
   RTC_Date current;
+  float voltage = getBattVoltage();
+
   if (initialLoad)
   {
     deactivateWifi();
     clearScreen();
     current = getClockTime();
     displayDate(current.day, current.month, current.year, false);
+    displayBatt(voltage, calcPercentage(voltage), isCharging());
     colonX = displayHour(current.hour, current.minute, false);
     oldMinute = current.minute;
     oldDay = current.day;
@@ -38,6 +42,8 @@ void pageClock(bool initialLoad)
     {
       displayDate(current.day, current.month, current.year, false);
     }
+
+    displayBatt(voltage, calcPercentage(voltage), isCharging());
     oldMinute = current.minute;
     oldDay = current.day;
   }
@@ -46,12 +52,14 @@ void pageClock(bool initialLoad)
 void pageRtc(bool initialLoad)
 {
   RTC_Date current;
+  float voltage = getBattVoltage();
   if (initialLoad)
   {
     deactivateWifi();
     clearScreen();
     current = getUTCTime();
     displayDate(current.day, current.month, current.year, true);
+    displayBatt(voltage, calcPercentage(voltage), isCharging());
     colonXUTC = displayHour(current.hour, current.minute, true);
     oldMinuteUTC = current.minute;
     oldDayUTC = current.day;
@@ -71,6 +79,7 @@ void pageRtc(bool initialLoad)
     {
       displayDate(current.day, current.month, current.year, true);
     }
+    displayBatt(voltage, calcPercentage(voltage), isCharging());
     oldMinuteUTC = current.minute;
     oldDayUTC = current.day;
   }
