@@ -35,7 +35,7 @@ void loop()
 
   if (SerialBT.connected())
   {
-    SerialBT.printf("%6.6d, %6.6d, %6.6d\n", accelbuff[0], accelbuff[1],accelbuff[2]);
+    SerialBT.printf("%6.6d, %6.6d, %6.6d\n\r", accelbuff[0], accelbuff[1],accelbuff[2]);
   }
 
   handleUi();
