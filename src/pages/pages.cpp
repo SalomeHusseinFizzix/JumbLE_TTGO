@@ -24,13 +24,14 @@ void initButton()
 void handleUi()
 {
 
+  tp_button.read();
+  if (!handlingAction)
+  {
+    showPage();
+  }
+
   if (SerialBT.connected() || isCharging() || handlingAction)
   {
-    tp_button.read();
-    if (!handlingAction)
-    {
-      showPage();
-    }
   }
   else if ((millis() - time_out) > max_time_out)
   {
