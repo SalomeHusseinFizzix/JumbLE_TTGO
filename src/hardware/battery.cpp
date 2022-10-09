@@ -1,4 +1,5 @@
 #include "battery.hpp"
+#include "bt.hpp"
 
 int vref = 1100;
 bool charging = false;
@@ -45,10 +46,13 @@ uint8_t calcPercentage(float volts)
   return (uint8_t) percentage;
 }
 
+uint32_t tsecs;
+
 void updateBatteryChargeStatus()
 {
   uint16_t v;
-  
+  uint32_t t;
+
   v = analogRead(BATT_ADC_PIN);
   vbatt = ((float) v / 4095.0) * 2.0 * 3.3 * (vref / 1000.0);
 
@@ -57,7 +61,17 @@ void updateBatteryChargeStatus()
 
   charging = !digitalRead(CHARGE_PIN);
 
-  printf("vbatt: %3.3f, vbus: %3.3f, charge: %d", vbatt, vbus, isCharging());
+  t = millis()/1000;
+  if (tsecs != t)
+  {
+    tsecs = t;
+    if (tsecs % 10 == 0)
+    {
+      if (SerialBT.connected())
+        SerialBT.printf("## %lu: vbat: %3.3f, vbus: %3.3f, charge: %d\n\r", tsecs, vbatt, vbus, isCharging());
+    }
+  }
+
   digitalWrite(LED_PIN, isCharging());
 }
 

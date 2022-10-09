@@ -1,11 +1,12 @@
 #include <Arduino.h>
 #include <EasyButton.h>
 #include "pages.hpp"
+#include "bt.hpp"
 
 int8_t page = 0;
 EasyButton tp_button(TP_PIN_PIN, 80, true, false);
 uint32_t time_out = millis();
-uint16_t max_time_out = 15000;
+uint32_t max_time_out = 15000;
 bool handlingAction = false;
 bool initialLoad = true;
 
@@ -23,17 +24,20 @@ void initButton()
 void handleUi()
 {
 
-  if (!isCharging() && (millis() - time_out > max_time_out && !handlingAction))
-  {
-    handleSleep(false);
-  }
-  else
+  if (SerialBT.connected() || isCharging() || handlingAction)
   {
     tp_button.read();
     if (!handlingAction)
     {
       showPage();
     }
+  }
+  else if ((millis() - time_out) > max_time_out)
+  {
+//    tftSleep(false);
+//    deactivateWifi();
+
+    handleSleep(false);
   }
 }
 
@@ -49,15 +53,15 @@ void showPage()
   switch (page)
   {
   case 0:
-    max_time_out = 8000;
+    max_time_out = 30000;
     pageClock(initialLoad);
     break;
   case 1:
-    max_time_out = 15000;
+    max_time_out = 30000;
     pageRtc(initialLoad);
     break;
   case 2:
-    max_time_out = 15000;
+    max_time_out = 30000;
     pageBattery(initialLoad);
     break;
   case 3:
@@ -77,7 +81,7 @@ void showPage()
     page++;
 #endif
   case 5:
-    max_time_out = 15000;
+    max_time_out = 30000;
     pageOta(initialLoad);
     break;
   case 6:
