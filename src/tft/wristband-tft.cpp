@@ -151,6 +151,16 @@ void displayDate(const uint8_t day, const uint8_t month, const uint16_t year, bo
   }
 }
 
+void displayBatt(float voltage, uint8_t percentage, bool charging)
+{
+  char buf[20] = " ";
+  snprintf(buf, sizeof(buf), "%u, %3.2fV, %u", percentage, voltage, charging);
+  tft.setTextDatum(TL_DATUM);
+  tft.setTextColor(TFT_GREEN, TFT_BLACK);
+  tft.setCursor(75, 65);
+  tft.print(buf);
+}
+
 uint16_t displayHour(const uint8_t hour, const uint8_t minute, bool utc)
 {
   uint8_t xpos = 6;

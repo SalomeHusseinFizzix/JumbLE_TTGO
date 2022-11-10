@@ -1,11 +1,12 @@
 #include <Arduino.h>
 #include <EasyButton.h>
 #include "pages.hpp"
+#include "bt.hpp"
 
 int8_t page = 0;
 EasyButton tp_button(TP_PIN_PIN, 80, true, false);
 uint32_t time_out = millis();
-uint16_t max_time_out = 15000;
+uint32_t max_time_out = 15000;
 bool handlingAction = false;
 bool initialLoad = true;
 
@@ -23,17 +24,21 @@ void initButton()
 void handleUi()
 {
 
-  if (0 && (millis() - time_out > max_time_out && !handlingAction))
+  tp_button.read();
+  if (!handlingAction)
   {
-    handleSleep(false);
+    showPage();
   }
-  else
+
+  if (SerialBT.connected() || isCharging() || handlingAction)
   {
-    tp_button.read();
-    if (!handlingAction)
-    {
-      showPage();
-    }
+  }
+  else if ((millis() - time_out) > max_time_out)
+  {
+//    tftSleep(false);
+//    deactivateWifi();
+
+    handleSleep(false);
   }
 }
 
@@ -48,42 +53,26 @@ void showPage()
 {
   switch (page)
   {
+
+  max_time_out = 30000;
+
   case 0:
-    max_time_out = 8000;
     pageClock(initialLoad);
     break;
   case 1:
-    max_time_out = 15000;
     pageRtc(initialLoad);
     break;
   case 2:
-    max_time_out = 15000;
     pageBattery(initialLoad);
     break;
   case 3:
-#ifndef IMU_SKIP
-    max_time_out = 60000;
-    pageBearing(initialLoad);
-    break;
-#else
-    page++;
-#endif
-  case 4:
-#ifndef IMU_SKIP
-    max_time_out = 30000;
-    pageTemperature(initialLoad);
-    break;
-#else
-    page++;
-#endif
-  case 5:
-    max_time_out = 15000;
     pageOta(initialLoad);
     break;
-  case 6:
+  default:
     handleSleep();
     break;
   }
+
   initialLoad = false;
 }
 
@@ -103,11 +92,6 @@ void handleAction()
     waitOta();
     break;
   case 3:
-#ifndef IMU_SKIP
-    actionBearing();
-#endif
-    break;
-  case 5:
     waitOta();
     page = 0;
     break;
