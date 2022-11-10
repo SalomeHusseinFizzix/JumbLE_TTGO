@@ -29,26 +29,10 @@ while True:
     dataPacket=str(b,'utf-8')
     accel=dataPacket.split(',')
     #kludgy try-catch to ignore the print statement regarding bluetooth enabling
-    try:
-        x_data.append(float(accel[0]))
-        y_data.append(float(accel[1]))
-        z_data.append(float(accel[2]))
-    except:
-        continue
-
     if len(accel) == 3:
         fcsv.write(dataPacket + '\n')
 
 fn.close()
-
 lilygo_data.close()
 
-plt.figure(figsize=(10,5))
-plt.plot(x_data)
-plt.plot(y_data)
-plt.plot(z_data)
-plt.xlabel('Samples')
-plt.ylabel('IMU Reading')
-plt.title(f'IMU Reading vs. Time, {dt.now().strftime("%D %H:%M:%S")}')
-plt.savefig(f'figures/IMUplot_{dt.now().strftime("%d%m%Y")}_{dt.now().strftime("%H%M%S")}.png')
-plt.show()
+
