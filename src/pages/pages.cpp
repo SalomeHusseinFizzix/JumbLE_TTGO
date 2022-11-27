@@ -24,13 +24,14 @@ void initButton()
 void handleUi()
 {
 
+  tp_button.read();
+  if (!handlingAction)
+  {
+    showPage();
+  }
+
   if (SerialBT.connected() || isCharging() || handlingAction)
   {
-    tp_button.read();
-    if (!handlingAction)
-    {
-      showPage();
-    }
   }
   else if ((millis() - time_out) > max_time_out)
   {
@@ -52,42 +53,26 @@ void showPage()
 {
   switch (page)
   {
+
+  max_time_out = 30000;
+
   case 0:
-    max_time_out = 30000;
     pageClock(initialLoad);
     break;
   case 1:
-    max_time_out = 30000;
     pageRtc(initialLoad);
     break;
   case 2:
-    max_time_out = 30000;
     pageBattery(initialLoad);
     break;
   case 3:
-#ifndef IMU_SKIP
-    max_time_out = 60000;
-    pageBearing(initialLoad);
-    break;
-#else
-    page++;
-#endif
-  case 4:
-#ifndef IMU_SKIP
-    max_time_out = 30000;
-    pageTemperature(initialLoad);
-    break;
-#else
-    page++;
-#endif
-  case 5:
-    max_time_out = 30000;
     pageOta(initialLoad);
     break;
-  case 6:
+  default:
     handleSleep();
     break;
   }
+
   initialLoad = false;
 }
 
@@ -107,11 +92,6 @@ void handleAction()
     waitOta();
     break;
   case 3:
-#ifndef IMU_SKIP
-    actionBearing();
-#endif
-    break;
-  case 5:
     waitOta();
     page = 0;
     break;
