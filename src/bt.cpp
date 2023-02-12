@@ -10,7 +10,6 @@ void bt_init(void)
 {
   char name[200] = "";
 
-  Serial.begin(115200);
   SerialBT.begin(name);
 
   /* 
@@ -21,12 +20,25 @@ void bt_init(void)
   const uint8_t * mac = esp_bt_dev_get_address();
   snprintf(name, sizeof(name), "Jumble %2.2x%2.2x", mac[4], mac[5]);
   esp_bt_dev_set_device_name(name);
-  Serial.printf("Bluetooth active. Device name is %s.", name);
+  Serial.printf("Bluetooth active. Device name is %s.\n", name);
 }
 
+extern bool vibrate;
 
 void bt_loop() 
 {
-  // Do nothing (for now).
-}
+  char buf[32];
 
+  // Do nothing (for now).
+  if (SerialBT.available()) 
+  {
+    int nread;
+
+    nread = SerialBT.readBytes(buf, sizeof(buf)-1);
+    buf[nread] = 0;
+    if (nread > 0) {}
+      Serial.printf("%s", buf);
+      if (buf[0]=='v')
+          vibrate = true;
+  }
+}
