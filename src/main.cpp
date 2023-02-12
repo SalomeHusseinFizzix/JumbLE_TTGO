@@ -18,7 +18,7 @@ void setup() {
   initClock();
   tftInit();
   bt_init();
-  deactivateWifi();
+  // deactivateWifi();
   setupADC();
 #ifndef IMU_SKIP
   initMPU();

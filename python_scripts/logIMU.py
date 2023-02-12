@@ -10,7 +10,7 @@ getch = msvcrt.getch
 
 logging.basicConfig(level=logging.DEBUG)
 
-port = 'COM6'
+port = 'COM5'
 
 if len(sys.argv) > 1:
     port = sys.argv[1]
