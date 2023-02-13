@@ -10,7 +10,10 @@ getch = msvcrt.getch
 
 logging.basicConfig(level=logging.DEBUG)
 
-port = 'COM6'
+if len(sys.argv) > 1:
+    port = sys.argv[1]
+else:
+    port = 'COM6'
 
 if len(sys.argv) > 1:
     port = sys.argv[1]
@@ -28,7 +31,9 @@ INTERVAL = 10
 while True:
     if time.time() > deadline:
         deadline += INTERVAL
+        print('Sending vibrate command')
         lilygo_data.write(b"v1\n")
+        print('Done')
 
     b = lilygo_data.readline().strip()
     print(b)

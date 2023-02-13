@@ -8,20 +8,21 @@
 #include "mpu.hpp"
 #include "bt.hpp"
 #include "BluetoothSerial.h"
-#include "drv2605.h"
+#include "Sparkfun_DRV2605L.h"
 
 int16_t *accelbuff;
 
-Adafruit_DRV2605 drv;
-bool vibrate = false;
+SFE_HMD_DRV2605L drv;
+bool vibrate = true;
+bool drv_initialised = false;
 
 void scanI2Cdevice(void)
 {
     uint8_t err, addr;
     int nDevices = 0;
     for (addr = 1; addr < 127; addr++) {
-        Wire.beginTransmission(addr);
-        err = Wire.endTransmission();
+        Wire1.beginTransmission(addr);
+        err = Wire1.endTransmission();
         if (err == 0) {
             SerialBT.print("I2C device found at address 0x");
             if (addr < 16)
@@ -48,6 +49,8 @@ void setup() {
   Serial.printf("Begin setup\n");
   Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
   Wire.setClock(400000);
+  Wire1.begin(DRV_SDA_PIN, DRV_SCL_PIN);
+  Wire1.setClock(400000);
   initClock();
   tftInit();
   bt_init();
@@ -61,36 +64,62 @@ void setup() {
   initButton();
   setupBattery();
 
+  // enable drv2605
+  digitalWrite(14, HIGH); // Enable high
+
   scanI2Cdevice();
 
-  if (!drv.begin()) {
-    SerialBT.println("Could not find DRV2605");
-  } else {
-    drv.begin(&Wire1);
-    drv.selectLibrary(1);
-    drv.setMode(DRV2605_MODE_INTTRIG);
-  }
+
   Serial.printf("Finish setup\n");
 }
 
 
 void loop() 
 {
+  // enable drv2605
+  digitalWrite(14, HIGH); // Enable high
+
   accelbuff=getAccel();
 
   if (SerialBT.connected())
   {
-    SerialBT.printf("%6.6d, %6.6d, %6.6d\n\r", accelbuff[0], accelbuff[1],accelbuff[2]);
+//    SerialBT.printf("%6.6d, %6.6d, %6.6d\n\r", accelbuff[0], accelbuff[1],accelbuff[2]);
   }
+
   handleUi();
   updateBatteryChargeStatus();
   bt_loop();
-  if (vibrate == true)
+
+  if (true && vibrate == true)
   {
-    Serial.printf("Vibrate\n");
-    drv.setWaveform(0, 7);  // play effect
-    drv.setWaveform(1, 0);   // end waveform
-    drv.go();
-    vibrate = false;
-  }
+      drv_initialised = true;
+
+      if (drv_initialised == false) {
+            
+            digitalWrite(14, HIGH); // Enable high
+
+            if (!drv.begin()) {
+              SerialBT.print("Could not find DRV2605\n\r");
+        } else {
+              drv.begin();
+              SerialBT.print("==== Initialised DRV2605\n\r");
+              drv.MotorSelect(0x0A);
+              drv.Library(7); //change to 6 for LRA motors 
+
+              drv_initialised = true;
+            }
+      }
+
+      if (drv_initialised)
+      {
+        SerialBT.printf("Vibrate\n");
+        drv.Mode(0); // This takes the device out of sleep mode
+        drv.Waveform(1, 16);  
+        drv.Waveform(2, 0);  
+        drv.Waveform(3, 16);  
+        drv.Waveform(4, 0);  
+        drv.go();
+        vibrate = false;
+      }
+    }
 }
