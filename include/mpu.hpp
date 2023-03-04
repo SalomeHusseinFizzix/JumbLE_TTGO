@@ -19,3 +19,4 @@ void mpuSleep();
 void mpuDeepSleep();
 float getTemperature();
 int16_t *getAccel();
+int16_t *getGyro();
