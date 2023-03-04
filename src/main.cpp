@@ -11,6 +11,7 @@
 #include "Sparkfun_DRV2605L.h"
 
 int16_t *accelbuff;
+int16_t *gyrobuff;
 
 SFE_HMD_DRV2605L drv;
 bool vibrate = true;
@@ -31,7 +32,7 @@ void scanI2Cdevice(void)
             SerialBT.println(" !");
             nDevices++;
         } else if (err == 4) {
-            SerialBT.print("Unknon error at address 0x");
+            SerialBT.print("Unknown error at address 0x");
             if (addr < 16)
                 SerialBT.print("0");
             SerialBT.println(addr, HEX);
@@ -80,10 +81,12 @@ void loop()
   digitalWrite(14, HIGH); // Enable high
 
   accelbuff=getAccel();
+  gyrobuff=getGyro();
 
   if (SerialBT.connected())
   {
-    SerialBT.printf("%6.6d, %6.6d, %6.6d\n\r", accelbuff[0], accelbuff[1],accelbuff[2]);
+    SerialBT.printf("%6.6d, %6.6d, %6.6d, %6.6d, %6.6d, %6.6d\n\r", accelbuff[0], accelbuff[1],accelbuff[2], 
+      gyrobuff[0], gyrobuff[1],gyrobuff[2]);
   }
 
   handleUi();
@@ -110,7 +113,7 @@ void loop()
             }
       }
 
-      if (drv_initialised)
+      if (drv_initialised && (sqrt(accelbuff[0]*accelbuff[0]+ accelbuff[1]*accelbuff[1]+accelbuff[2]*accelbuff[2])>17500))
       {
         SerialBT.printf("Vibrate\n");
         drv.Mode(0); // This takes the device out of sleep mode
