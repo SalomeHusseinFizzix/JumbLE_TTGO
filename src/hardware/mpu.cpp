@@ -38,6 +38,13 @@ int16_t *getAccel()
   return buf;
 }
 
+int16_t buf2[3];
+int16_t *getGyro()
+{ 
+  IMU.readGyroData(buf2);
+  return buf2;
+}
+
 int16_t getBearing()
 {
   IMU.readMagData(IMU.magCount); // Read the x/y/z adc values

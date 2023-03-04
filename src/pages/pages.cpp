@@ -15,7 +15,7 @@ void initButton()
   pinMode(TP_PWR_PIN, PULLUP);
   digitalWrite(TP_PWR_PIN, HIGH);
   tp_button.begin();
-  tp_button.onPressedFor(1000, handleAction);
+  tp_button.onPressedFor(4000, handleAction);
   tp_button.onPressed(increasePage);
   page = 0;
   showPage();
@@ -54,18 +54,18 @@ void showPage()
   switch (page)
   {
 
-  max_time_out = 30000;
+  // max_time_out = 30000;
 
+  // case 0:
+  //   pageClock(initialLoad);
+  //   break;
+  // case 1:
+  //   pageRtc(initialLoad);
+    // break;
   case 0:
-    pageClock(initialLoad);
-    break;
-  case 1:
-    pageRtc(initialLoad);
-    break;
-  case 2:
     pageBattery(initialLoad);
     break;
-  case 3:
+  case 1:
     pageOta(initialLoad);
     break;
   default:
@@ -82,16 +82,16 @@ void handleAction()
   time_out = millis();
   switch (page)
   {
+  // case 0:
+  //   actionClock();
+  //   break;
+  // case 1:
+  //   actionClock();
+  //   break;
   case 0:
-    actionClock();
-    break;
-  case 1:
-    actionClock();
-    break;
-  case 2:
     waitOta();
     break;
-  case 3:
+  case 1:
     waitOta();
     page = 0;
     break;

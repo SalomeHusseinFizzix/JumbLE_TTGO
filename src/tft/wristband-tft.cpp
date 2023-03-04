@@ -240,7 +240,7 @@ void drawBattery(float voltage, uint8_t percentage, bool charging)
   {
     tft.fillRoundRect(originx, originy, width, height, 3, TFT_BLACK);
   }
-  tft.fillRoundRect(originx - tabwidth + 1, (height - tabheight) / 2 + originy, tabwidth, tabheight, 1, TFT_WHITE);
+  tft.fillRoundRect(originx - tabwidth + 1, (height - tabheight) / 2 + originy, tabwidth, tabheight, 1, TFT_BLACK);
   tft.drawRoundRect(originx, originy, width, height, 3, TFT_WHITE);
   tft.fillRect(originx + margin, originy + margin, barWidth * percentage / 100.0, barHeight, TFT_DARKGREEN);
 

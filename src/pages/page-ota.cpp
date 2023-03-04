@@ -15,7 +15,7 @@ void waitOta()
   activateWifi();
   setupOTA();
   msgInfo("Waiting for OTA on", WiFi.localIP().toString().c_str());
-  while (millis() - oldmilis < 60000)
+  while (millis() - oldmilis < 120000)
   {
     while (otaRunning())
     {
