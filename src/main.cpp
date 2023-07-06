@@ -89,40 +89,39 @@ void loop()
       gyrobuff[0], gyrobuff[1],gyrobuff[2]);
   }
 
+//  Serial.printf("%6.6d, %6.6d, %6.6d, %6.6d, %6.6d, %6.6d\n\r", accelbuff[0], accelbuff[1],accelbuff[2], 
+//      gyrobuff[0], gyrobuff[1],gyrobuff[2]);
+
   handleUi();
   updateBatteryChargeStatus();
   bt_loop();
 
-  if (true && vibrate == true)
+  if (vibrate == true)
   {
-      drv_initialised = true;
+    // swa rfc - Tidy up the digital writes above this, once we know there's no need for a delay after EN.
+    digitalWrite(14, HIGH); // Enable high
+    drv.begin();
+    SerialBT.print("==== Initialised DRV2605\n\r");
+    drv.MotorSelect(0x0A);
+    drv.Library(7); //change to 6 for LRA motors 
 
-      if (drv_initialised == false) {
-            
-            digitalWrite(14, HIGH); // Enable high
+    if (sqrt(accelbuff[0]*accelbuff[0]+ accelbuff[1]*accelbuff[1]+accelbuff[2]*accelbuff[2])>17500)
+      vibrate = true;
 
-            if (!drv.begin()) {
-              SerialBT.print("Could not find DRV2605\n\r");
-        } else {
-              drv.begin();
-              SerialBT.print("==== Initialised DRV2605\n\r");
-              drv.MotorSelect(0x0A);
-              drv.Library(7); //change to 6 for LRA motors 
+    if (vibrate)
+    {
+      SerialBT.printf("Vibrate\n");
+      drv.Mode(0); // This takes the device out of sleep mode
 
-              drv_initialised = true;
-            }
-      }
-
-      if (drv_initialised && (sqrt(accelbuff[0]*accelbuff[0]+ accelbuff[1]*accelbuff[1]+accelbuff[2]*accelbuff[2])>17500))
+      for (int i = 0; i < 100; i++)
       {
-        SerialBT.printf("Vibrate\n");
-        drv.Mode(0); // This takes the device out of sleep mode
         drv.Waveform(1, 16);  
         drv.Waveform(2, 0);  
         drv.Waveform(3, 16);  
         drv.Waveform(4, 0);  
         drv.go();
-        vibrate = false;
       }
+      vibrate = false;
     }
+  }
 }
