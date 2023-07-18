@@ -99,6 +99,7 @@ void loop()
   if (sqrt(accelbuff[0]*accelbuff[0]+ accelbuff[1]*accelbuff[1]+accelbuff[2]*accelbuff[2])>17500)
     vibrate = true;
 
+  vibrate = false;
   if (vibrate == true)
   {
     // swa rfc - Tidy up the digital writes above this, once we know there's no need for a delay after EN.
