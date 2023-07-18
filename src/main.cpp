@@ -53,8 +53,8 @@ void setup() {
   Wire1.begin(DRV_SDA_PIN, DRV_SCL_PIN);
   Wire1.setClock(400000);
   initClock();
-  tftInit();
   bt_init();
+  tftInit();
   // deactivateWifi();
   setupADC();
 #ifndef IMU_SKIP
@@ -96,6 +96,9 @@ void loop()
   updateBatteryChargeStatus();
   bt_loop();
 
+  if (sqrt(accelbuff[0]*accelbuff[0]+ accelbuff[1]*accelbuff[1]+accelbuff[2]*accelbuff[2])>17500)
+    vibrate = true;
+
   if (vibrate == true)
   {
     // swa rfc - Tidy up the digital writes above this, once we know there's no need for a delay after EN.
@@ -105,23 +108,17 @@ void loop()
     drv.MotorSelect(0x0A);
     drv.Library(7); //change to 6 for LRA motors 
 
-    if (sqrt(accelbuff[0]*accelbuff[0]+ accelbuff[1]*accelbuff[1]+accelbuff[2]*accelbuff[2])>17500)
-      vibrate = true;
+    SerialBT.printf("Vibrate\n");
+    drv.Mode(0); // This takes the device out of sleep mode
 
-    if (vibrate)
+    for (int i = 0; i < 100; i++)
     {
-      SerialBT.printf("Vibrate\n");
-      drv.Mode(0); // This takes the device out of sleep mode
-
-      for (int i = 0; i < 100; i++)
-      {
-        drv.Waveform(1, 16);  
-        drv.Waveform(2, 0);  
-        drv.Waveform(3, 16);  
-        drv.Waveform(4, 0);  
-        drv.go();
-      }
-      vibrate = false;
+      drv.Waveform(1, 16);  
+      drv.Waveform(2, 0);  
+      drv.Waveform(3, 16);  
+      drv.Waveform(4, 0);  
+      drv.go();
     }
+    vibrate = false;
   }
 }
