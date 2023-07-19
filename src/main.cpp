@@ -16,7 +16,7 @@ int16_t *gyrobuff;
 SFE_HMD_DRV2605L drv;
 bool vibrate = true;
 bool drv_initialised = false;
-
+bool vibe_request;
 void scanI2Cdevice(void)
 {
     uint8_t err, addr;
@@ -99,7 +99,9 @@ void loop()
   if (sqrt(accelbuff[0]*accelbuff[0]+ accelbuff[1]*accelbuff[1]+accelbuff[2]*accelbuff[2])>17500)
     vibrate = true;
 
-  vibrate = false;
+  if (vibe_request== true)
+    vibrate = true;
+  // vibrate = false;
   if (vibrate == true)
   {
     // swa rfc - Tidy up the digital writes above this, once we know there's no need for a delay after EN.
