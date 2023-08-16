@@ -17,6 +17,7 @@ void initButton()
   digitalWrite(TP_PWR_PIN, HIGH);
   tp_button.begin();
   tp_button.onPressedFor(4000, handleAction);
+  //this is my proposed way for the button press to work, but I've yet to test it
   tp_button.onPressed(activateVibe);
   page = 0;
   showPage();
