@@ -16,7 +16,7 @@ int16_t *gyrobuff;
 SFE_HMD_DRV2605L drv;
 bool vibrate = true;
 bool drv_initialised = false;
-bool vibe_request;
+extern bool vibe_request;
 void scanI2Cdevice(void)
 {
     uint8_t err, addr;

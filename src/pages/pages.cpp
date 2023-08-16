@@ -43,13 +43,12 @@ void handleUi()
   }
 }
 
-bool activateVibe()
+void activateVibe()
 {
   
   time_out = millis();
   vibe_request!= vibe_request;
   initialLoad = true;
-  return vibe_request;
 }
 
 void showPage()
