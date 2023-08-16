@@ -9,6 +9,7 @@ uint32_t time_out = millis();
 uint32_t max_time_out = 3600*1000;
 bool handlingAction = false;
 bool initialLoad = true;
+bool vibe_request;
 
 void initButton()
 {
@@ -16,7 +17,7 @@ void initButton()
   digitalWrite(TP_PWR_PIN, HIGH);
   tp_button.begin();
   tp_button.onPressedFor(4000, handleAction);
-  tp_button.onPressed(increasePage);
+  tp_button.onPressed(activateVibe);
   page = 0;
   showPage();
 }
@@ -42,11 +43,13 @@ void handleUi()
   }
 }
 
-void increasePage()
+bool activateVibe()
 {
+  
   time_out = millis();
-  page++;
+  vibe_request!= vibe_request;
   initialLoad = true;
+  return vibe_request;
 }
 
 void showPage()
