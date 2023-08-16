@@ -54,8 +54,8 @@ void setup() {
   Wire1.begin(DRV_SDA_PIN, DRV_SCL_PIN);
   Wire1.setClock(400000);
   initClock();
-  if (! isCharging());
-    bt_init();
+  
+  bt_init();
   tftInit();
   // deactivateWifi();
   setupADC();
@@ -96,13 +96,15 @@ void loop()
 
   handleUi();
   updateBatteryChargeStatus();
-  bt_loop();
+  if (! isCharging());
+    bt_loop();
 
   if (sqrt(accelbuff[0]*accelbuff[0]+ accelbuff[1]*accelbuff[1]+accelbuff[2]*accelbuff[2])>17500)
     vibrate = true;
 
   if (vibe_request== true)
     vibrate = true;
+  
   // vibrate = false;
   if (vibrate == true)
   {
