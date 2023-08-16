@@ -9,6 +9,7 @@
 #include "bt.hpp"
 #include "BluetoothSerial.h"
 #include "Sparkfun_DRV2605L.h"
+#include "battery.hpp"
 
 int16_t *accelbuff;
 int16_t *gyrobuff;
@@ -53,7 +54,8 @@ void setup() {
   Wire1.begin(DRV_SDA_PIN, DRV_SCL_PIN);
   Wire1.setClock(400000);
   initClock();
-  bt_init();
+  if (! isCharging());
+    bt_init();
   tftInit();
   // deactivateWifi();
   setupADC();
