@@ -6,11 +6,12 @@
 
 BluetoothSerial SerialBT;
 
+char bt_name[200] = "";
+
 void bt_init(void)
 {
-  char name[200] = "";
 
-  SerialBT.begin(name);
+  SerialBT.begin(bt_name);
 
   /* 
    * Note that the BT MAC isn't unavailable until BT is initialised.
@@ -18,9 +19,9 @@ void bt_init(void)
    * So we have to update the device name once we get access to the MAC.
    */
   const uint8_t * mac = esp_bt_dev_get_address();
-  snprintf(name, sizeof(name), "Jumble %2.2x%2.2x", mac[4], mac[5]);
-  esp_bt_dev_set_device_name(name);
-  Serial.printf("Bluetooth active. Device name is %s.\n", name);
+  snprintf(bt_name, sizeof(bt_name), "Jumble %2.2x%2.2x", mac[4], mac[5]);
+  esp_bt_dev_set_device_name(bt_name);
+  Serial.printf("Bluetooth active. Device name is %s.\n", bt_name);
 }
 
 extern bool vibrate;
