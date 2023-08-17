@@ -11,6 +11,8 @@ bool handlingAction = false;
 bool initialLoad = true;
 bool vibe_request;
 
+void activateVibe(void);
+
 void initButton()
 {
   pinMode(TP_PWR_PIN, PULLUP);
