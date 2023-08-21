@@ -1,4 +1,6 @@
 #include "wristband-tft.hpp"
+#include "bt.hpp"
+#include "esp_bt_device.h"
 
 TFT_eSPI tft = TFT_eSPI();
 
@@ -226,7 +228,7 @@ void drawBattery(float voltage, uint8_t percentage, bool charging)
   uint16_t originx = 25;
   uint16_t originy = 15;
   uint16_t width = 120;
-  uint16_t height = 40;
+  uint16_t height = 20;
   uint16_t tabheight = 15;
   uint16_t tabwidth = 5;
   uint8_t margin = 2;
@@ -251,7 +253,16 @@ void drawBattery(float voltage, uint8_t percentage, bool charging)
 
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
   tft.setTextDatum(BC_DATUM);
+
   String voltageInfo = String(voltageString) + "V";
+  
+  char name[200];
+  const uint8_t * mac = esp_bt_dev_get_address();
+  snprintf(name, sizeof(name), "Jumble %2.2X%2.2X", mac[4], mac[5]);
+  tft.drawString(name, tft.width() / 2, tft.height()-12 );
+
+  Serial.printf("draw batt %s\n", name);
+
   if (charging)
   {
     voltageInfo += " Charging";
