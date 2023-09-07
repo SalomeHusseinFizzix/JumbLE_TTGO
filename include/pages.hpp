@@ -13,3 +13,4 @@ void showPage();
 void handleSleep(bool showMsg = true);
 void initButton();
 void handleAction();
+bool getVibeReq();

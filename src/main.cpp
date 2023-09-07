@@ -119,7 +119,6 @@ void setup() {
   Serial.printf("Finish setup\n");
 }
 
-
 void loop() 
 {
   // enable drv2605
@@ -148,24 +147,32 @@ void loop()
   if (sqrt(accelbuff[0]*accelbuff[0]+ accelbuff[1]*accelbuff[1]+accelbuff[2]*accelbuff[2])>17500)
     vibrate = true;
 
-  if (vibe_request== true)
+  if (getVibeReq()== true)
+  {
     vibrate = true;
-  
-//   vibrate = false;
+  }
+
   if (vibrate == true)
   {
     // swa rfc - Tidy up the digital writes above this, once we know there's no need for a delay after EN.
     digitalWrite(14, HIGH); // Enable high
     drv.begin();
-    Serial.print("==== Initialised DRV2605\n\r");
     drv.MotorSelect(0x0A);
     drv.Library(7); //change to 6 for LRA motors 
 
-    Serial.printf("Vibrate start\n");
+    Serial.printf("Vibrate start:\n");
     drv.Mode(0); // This takes the device out of sleep mode
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 1; i++)
     {
+      drv.Waveform(1, 16);  
+      drv.Waveform(2, 0);  
+      drv.Waveform(3, 16);  
+      drv.Waveform(4, 0);  
+      drv.Waveform(1, 16);  
+      drv.Waveform(2, 0);  
+      drv.Waveform(3, 16);  
+      drv.Waveform(4, 0);  
       drv.Waveform(1, 16);  
       drv.Waveform(2, 0);  
       drv.Waveform(3, 16);  

@@ -6,7 +6,8 @@
 int8_t page = 0;
 EasyButton tp_button(TP_PIN_PIN, 80, true, false);
 uint32_t time_out = millis();
-uint32_t max_time_out = 3600*1000;
+uint32_t max_time_out = 60*1000;
+uint32_t screen_time_out = 5*1000;
 bool handlingAction = false;
 bool initialLoad = true;
 bool vibe_request;
@@ -19,7 +20,6 @@ void initButton()
   digitalWrite(TP_PWR_PIN, HIGH);
   tp_button.begin();
   tp_button.onPressedFor(4000, handleAction);
-  //this is my proposed way for the button press to work, but I've yet to test it
   tp_button.onPressed(activateVibe);
   page = 0;
   showPage();
@@ -37,6 +37,10 @@ void handleUi()
   if (SerialBT.connected() || isCharging() || handlingAction)
   {
   }
+//  else if ((millis() - time_out) > screen_time_out)
+//  {
+//    tftSleep(false);
+//  }
   else if ((millis() - time_out) > max_time_out)
   {
 //    tftSleep(false);
@@ -48,10 +52,16 @@ void handleUi()
 
 void activateVibe()
 {
-  
+  Serial.print("activateVibe()\n\r");
   time_out = millis();
-  vibe_request!= vibe_request;
+  vibe_request = !vibe_request;
+
   initialLoad = true;
+}
+
+bool getVibeReq()
+{
+  return vibe_request;
 }
 
 void showPage()
